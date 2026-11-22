@@ -129,6 +129,19 @@ const categories = [
 ];
 
 let nextMenuId = 1;
+const trendingTitles = new Set([
+  "Espresso",
+  "Café Latte",
+  "Caramel Macchiato",
+  "Cold Brew",
+  "Matcha Latte",
+  "Strawberry Milk",
+  "Thai Tea",
+  "Butter Croissant",
+  "Chicken Katsu Rice",
+  "Tiramisu",
+]);
+
 export const menu = categories.flatMap(({ name, photoSet, items }) => items.map(([title, description, price, photoIndex]) => {
   const image = photoSet[photoIndex];
   return {
@@ -137,6 +150,7 @@ export const menu = categories.flatMap(({ name, photoSet, items }) => items.map(
     description,
     price,
     category: name,
+    trending: trendingTitles.has(title),
     image,
     fallbackImage: photoSet[0],
     alt: `${title} menu item`,

@@ -4,7 +4,7 @@ import { Search } from "lucide-react";
 import { favoriteMenu, menu } from "../data";
 import Reveal from "./Reveal";
 
-const categories = ["All Menu", "Coffee", "Non-Coffee", "Tea", "Bakery", "Food", "Dessert"];
+const categories = ["Trending", "Coffee", "Non-Coffee", "Tea", "Bakery", "Food", "Dessert"];
 const rupiah = new Intl.NumberFormat("id-ID", {
   style: "currency",
   currency: "IDR",
@@ -132,13 +132,13 @@ function FavoriteCarousel() {
 }
 
 export default function MenuSlider() {
-  const [activeCategory, setActiveCategory] = useState("All Menu");
+  const [activeCategory, setActiveCategory] = useState("Trending");
   const [search, setSearch] = useState("");
 
   const filteredMenu = useMemo(() => {
     const normalizedSearch = search.trim().toLocaleLowerCase("id-ID");
     return menu.filter((item) => {
-      const matchesCategory = activeCategory === "All Menu" || item.category === activeCategory;
+      const matchesCategory = activeCategory === "Trending" ? item.trending : item.category === activeCategory;
       const matchesSearch = item.title.toLocaleLowerCase("id-ID").includes(normalizedSearch);
       return matchesCategory && matchesSearch;
     });
@@ -189,9 +189,17 @@ export default function MenuSlider() {
         </nav>
 
         {filteredMenu.length > 0 ? (
-          <div aria-live="polite" className="mt-7 grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 xl:grid-cols-4">
-            {filteredMenu.map((item) => <MenuCard key={item.id} item={item} />)}
-          </div>
+          <>
+            <div className="mt-7 flex items-baseline justify-between gap-4">
+              <h3 className="font-display text-2xl">{activeCategory === "Trending" ? "Trending" : activeCategory}</h3>
+              <p className="text-xs text-espresso/55 sm:text-sm">
+                {activeCategory === "Trending" ? "10 menu pilihan" : `${filteredMenu.length} menu`}
+              </p>
+            </div>
+            <div aria-live="polite" className="mt-4 grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 xl:grid-cols-4">
+              {filteredMenu.map((item) => <MenuCard key={item.id} item={item} />)}
+            </div>
+          </>
         ) : (
           <p role="status" className="mt-10 rounded-2xl border border-espresso/10 bg-white px-6 py-12 text-center text-espresso/65">
             Menu tidak ditemukan.
